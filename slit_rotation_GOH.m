@@ -43,9 +43,9 @@ displacementMagnitude = 60;
 % % FEA control settings
 numTimeSteps=60; %Number of time steps desired
 max_refs=1000; %Max reforms
-max_ups=20; %Set to zero to use full-Newton iterations
-opt_iter=50; %Optimum number of iterations
-max_retries=30; %Maximum number of retires
+max_ups=30; %Set to zero to use full-Newton iterations
+opt_iter=70; %Optimum number of iterations
+max_retries=50; %Maximum number of retires
 dtmin=(1/numTimeSteps)/10000; %Minimum time step size
 dtmax=(1/numTimeSteps); %Maximum time step size
 runMode='internal';
@@ -54,8 +54,7 @@ runMode='internal';
 % Path names
 % Path names
 defaultFolder = fileparts(mfilename('fullpath'));
-savePath = 'C:\Sahar-GIBBON-codes\paper3-final\final results-GOH\paper2-revisiong\GUPTA_2fibers\data\gupta_horizontal';
-
+savePath = 'C:\Sahar-GIBBON-codes\paper3-final\final results-GOH\paper2-revisiong\GUPTA_2fibers\data';
 
 % Defining file names
 febioFebFileNamePart='tempModel';
@@ -76,7 +75,7 @@ febioLogFileName_force=[febioFebFileNamePart,'_force_out.txt']; %Log file name f
 %% =========================================================
 
 %% ----------------- Basic settings
-pointSpacing = 2.5;   % target point spacing for boundary resampling 2 for 90, 45 works for 0 langer 90 work)
+pointSpacing = 1;   % target point spacing for boundary resampling 2 for 90, 45 works for 0 langer 90 work)
 t            = 3;     % extrusion thickness (mm)
 
 %% ----------------- Plate dimensions
@@ -95,10 +94,10 @@ slitHeight   = 4.8;
 numVerticalPerColumn = 4;
 vertSlitWidth        = 0.96;
 vertSlitHeight       = 9.6;
-vertGap              = 2.45;
+vertGap              = 2.4;
 
 % Margins
-edgeMargin = 2.6;
+edgeMargin = 2.64;
 topMargin  = 0;
 
 %% ----------------- Choose angle: only 0,45,90
@@ -281,7 +280,7 @@ elseif rotationAngle == 90
     rotName = 'horizontal';
 end
 
-savePath = sprintf('%s-%d-ps%g', savePath, nElem, pointSpacing);
+savePath = fullfile(savePath, sprintf('gupta_%s-%d-ps%g', rotName, nElem, pointSpacing));
 
 if ~exist(savePath,'dir')
     mkdir(savePath);
