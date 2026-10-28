@@ -771,24 +771,25 @@ for ia = 1:numel(angles_deg)
             (E_stress_mat(:,2,:)-E_stress_mat(:,3,:)).^2 + ...
             (E_stress_mat(:,1,:)-E_stress_mat(:,3,:)).^2  )/2); %Von Mises stress
 
-        %% Compute p90 stress using same rule as first code
+        %% Compute p90 stress: area-weighted 90th percentile of thickness-averaged von Mises stress
 
-        A = patchArea(E, V_DEF(:,:,1));
-        A_tot = sum(A);
+        % Group penta6 elements stacked through the thickness (same in-plane triangle)
+        [~,~,indXY] = unique(round(VE(:,1:2)/1e-6),'rows'); % In-plane node id
+        [~,indFirst,indColumn] = unique(sort(indXY(E(:,1:3)),2),'rows'); % Column id per element
 
-        p90_vec = zeros(size(N_disp_mat,3),1);
+        A_col = patchArea(E(indFirst,1:3),VE); % In-plane reference area per column (counted once)
+        zE = VE(:,3);
+        dz = abs(mean(zE(E(:,4:6)),2)-mean(zE(E(:,1:3)),2)); % Element layer thickness
+        t_col = accumarray(indColumn,dz); % Total thickness per column
 
-        for qt = 1:size(N_disp_mat,3)
-
-            sigmaVM = E_stress_mat_VM(:,:,qt);
-
-            % Same rule as first code
-            Q = (sigmaVM(:) .* A) ./ A_tot;
-
-            p90_vec(qt) = prctile(Q,90);
-
+        nSteps = size(E_stress_mat_VM,3);
+        p90_vec = zeros(nSteps,1);
+        for qt = 1:nSteps
+            S_col = accumarray(indColumn,E_stress_mat_VM(:,1,qt).*dz)./t_col; % Thickness-averaged von Mises
+            [S_sort,indSort] = sort(S_col);
+            A_cum = cumsum(A_col(indSort))/sum(A_col); % Cumulative area fraction
+            p90_vec(qt) = S_sort(find(A_cum>=0.9,1,'first'));
         end
-
         cFigure; hold on;
         plot(lambda_y_vec,p90_vec,'r-o','LineWidth',3,'MarkerFaceColor','r');
         xlabel('\lambda_y');
