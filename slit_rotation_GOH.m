@@ -376,7 +376,7 @@ for ia = 1:numel(angles_deg)
     e1 = (R*[1 0 0]')';  % Rotated fiber direction
 
     e1_dir = repmat(e1, nElem, 1);
-    e2_dir = repmat((R*[0 1 0]')', nElem, 1);   % in-plane, rotates with e1  % Keep this fixed
+    e2_dir = repmat([0 0 1], nElem, 1);  % Keep this fixed
     e3_dir = cross(e1_dir, e2_dir, 2);   % Orthogonal vector
 
     % Plot material directions
