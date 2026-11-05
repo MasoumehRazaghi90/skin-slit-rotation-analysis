@@ -27,18 +27,7 @@ LangerAngle_para = 90/180*pi; % Angle of Langer line with loading direction
 angleSelection=1;%1 perpendicular to LL and 2 parallel
 LangerAngles = [LangerAngle_perp, LangerAngle_para];
 
-
 displacementMagnitude = 60;
-
-% FEA control settings
-% numTimeSteps=30; %Number of time steps desired
-% max_refs=20; %Max reforms
-% max_ups=0; %Set to zero to use full-Newton iterations
-% opt_iter=10; %Optimum number of iterations
-% max_retries=2; %Maximum number of retires
-% dtmin=(1/numTimeSteps)/100; %Minimum time step size
-% dtmax=(1/numTimeSteps); %Maximum time step size
-% runMode='internal';
 
 % % FEA control settings
 numTimeSteps=60; %Number of time steps desired
@@ -358,15 +347,9 @@ for ia = 1:numel(angles_deg)
 
 
     if ang == 0
-        % mu_ini_local    = mu_perp_ini;
-        % sigma_ini_local = sigma_perp_ini;
-        % Dmax_ini_local  = Dmax_perp_ini;
         angLabel        = 'Perpendicular';
     elseif ang == 90
-        % mu_ini_local    = mu_para_ini;
-        % sigma_ini_local = sigma_para_ini;
-        % Dmax_ini_local  = Dmax_para_ini;
-        angLabel        = 'Parallel';
+          angLabel        = 'Parallel';
     else
         error('Only 0 and 90 degrees are supported in this setup.');
     end
@@ -376,7 +359,7 @@ for ia = 1:numel(angles_deg)
     e1 = (R*[1 0 0]')';  % Rotated fiber direction
 
     e1_dir = repmat(e1, nElem, 1);
-    e2_dir = repmat([0 0 1], nElem, 1);  
+    e2_dir = repmat([0 0 1], nElem, 1);  % Keep this fixed e2_dir = repmat((R*[0 1 0]')', nElem, 1);   % in-plane, rotates with e1  % Keep this fixed
     e3_dir = cross(e1_dir, e2_dir, 2);   % Orthogonal vector
 
     % Plot material directions
@@ -457,7 +440,7 @@ for ia = 1:numel(angles_deg)
 
     % GOH‑specific material parameters
     febio_spec.Material.material{1}.solid{1}.ATTR.type='HGO unconstrained';
-    febio_spec.Material.material{1}.solid{1}.c     = c_ini;
+    febio_spec.Material.material{1}.solid{1}.c     = 2*(c_ini/2);
     febio_spec.Material.material{1}.solid{1}.k1    = k1_ini;
     febio_spec.Material.material{1}.solid{1}.k2    = k2_ini;
     febio_spec.Material.material{1}.solid{1}.gamma = gamma;
@@ -741,31 +724,6 @@ for ia = 1:numel(angles_deg)
         E_damage_mat = dataStruct.data;
         % ===== STRAIN ENERGY vs STRETCH =====
 
-        % nSteps = size(E_energy_mat,3);
-
-        % energy_total_vec = zeros(nSteps,1);
-        %
-        % for i = 1:nSteps
-        %     E_step = E_energy_mat(:,1,i);
-        %     energy_total_vec(i) = mean(E_step);
-        % end
-
-        % cFigure; hold on;
-        % plot(lambda_y_vec, energy_total_vec, 'k-', 'LineWidth', 5);
-        %
-        % xlabel('\lambda_y (Axial Stretch)', 'Interpreter', 'tex', ...
-        %     'FontSize', 20,'FontWeight', 'bold');
-        %
-        % ylabel('Strain Energy Density', 'Interpreter', 'tex', ...
-        %     'FontSize', 20, 'FontWeight', 'bold');
-        %
-        % title(sprintf('Strain Energy vs Stretch  |  Fiber Angle = %d°', ang), ...
-        %     'FontSize',20,'FontWeight','bold');
-        %
-        % set(gca, 'FontSize', 16,'FontWeight', 'bold');
-        % xlim([1 max(lambda_y_vec)]);
-        % axis square;
-        % box on; grid on;
 
         E_stress_mat_VM=sqrt(( (E_stress_mat(:,1,:)-E_stress_mat(:,2,:)).^2 + ...
             (E_stress_mat(:,2,:)-E_stress_mat(:,3,:)).^2 + ...
@@ -972,13 +930,7 @@ for ia = 1:numel(angles_deg)
         anim8(hf,animStruct);
         drawnow;
 
-        % %%
-        % p90_vec = zeros(size(N_disp_mat,3),1);
-        %
-        % for qt = 1:size(N_disp_mat,3)
-        %     sigmaVM = E_stress_mat_VM(:,:,qt);
-        %     p90_vec(qt) = prctile(sigmaVM(:),90);
-        % end
+  
 
 
         %% ================== STRESS ANIMATION ==================
