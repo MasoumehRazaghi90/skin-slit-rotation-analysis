@@ -376,7 +376,7 @@ for ia = 1:numel(angles_deg)
     e1 = (R*[1 0 0]')';  % Rotated fiber direction
 
     e1_dir = repmat(e1, nElem, 1);
-    e2_dir = repmat([0 0 1], nElem, 1);  % Keep this fixed
+    e2_dir = repmat((R*[0 1 0]')', nElem, 1);   % in-plane, rotates with e1  % Keep this fixed
     e3_dir = cross(e1_dir, e2_dir, 2);   % Orthogonal vector
 
     % Plot material directions
@@ -457,7 +457,7 @@ for ia = 1:numel(angles_deg)
 
     % GOH‑specific material parameters
     febio_spec.Material.material{1}.solid{1}.ATTR.type='HGO unconstrained';
-    febio_spec.Material.material{1}.solid{1}.c     = c_ini/2;
+    febio_spec.Material.material{1}.solid{1}.c     = c_ini;
     febio_spec.Material.material{1}.solid{1}.k1    = k1_ini;
     febio_spec.Material.material{1}.solid{1}.k2    = k2_ini;
     febio_spec.Material.material{1}.solid{1}.gamma = gamma;
@@ -466,13 +466,13 @@ for ia = 1:numel(angles_deg)
 
 
     % GOH‑specific material parameters
-    febio_spec.Material.material{1}.solid{2}.ATTR.type='HGO unconstrained';
-    febio_spec.Material.material{1}.solid{2}.c     = c_ini/2;
-    febio_spec.Material.material{1}.solid{2}.k1    = k1_ini;
-    febio_spec.Material.material{1}.solid{2}.k2    = k2_ini;
-    febio_spec.Material.material{1}.solid{2}.gamma = -gamma;
-    febio_spec.Material.material{1}.solid{2}.kappa = kappa_ini;
-    febio_spec.Material.material{1}.solid{2}.k     = k_ini;
+    % febio_spec.Material.material{1}.solid{2}.ATTR.type='HGO unconstrained';
+    % febio_spec.Material.material{1}.solid{2}.c     = c_ini/2;
+    % febio_spec.Material.material{1}.solid{2}.k1    = k1_ini;
+    % febio_spec.Material.material{1}.solid{2}.k2    = k2_ini;
+    % febio_spec.Material.material{1}.solid{2}.gamma = -gamma;
+    % febio_spec.Material.material{1}.solid{2}.kappa = kappa_ini;
+    % febio_spec.Material.material{1}.solid{2}.k     = k_ini;
     % Mesh section
     % -> Nodes
 
@@ -669,7 +669,7 @@ for ia = 1:numel(angles_deg)
             lambda_y_vec(i) = h / h0;
             J_vec(i)        = A / A0;%area ratio
 
-            % True Poisson’s ratio (log-based definition)
+            % True Poisson's ratio (log-based definition)
             if lambda_y_vec(i) > 0 && lambda_x_vec(i) > 0
                 nu_true(i) = -log(lambda_x_vec(i)) / log(lambda_y_vec(i));
             else
@@ -686,9 +686,9 @@ for ia = 1:numel(angles_deg)
             Fy_vec(i) = sum(N_force_mat(:,2,i)); % sum of reaction forces in y
         end
 
-        %% Poisson’s ratio vs. Axial Stretch
+        %% Poisson's ratio vs. Axial Stretch
 
-        % Plot true Poisson’s ratio
+        % Plot true Poisson's ratio
         cFigure; hold on;
         plot(lambda_y_vec, nu_true, 'b-', 'LineWidth', 5);
         xlabel('\lambda_y (Axial Stretch)', 'Interpreter', 'tex', 'FontSize', 20,'FontWeight', 'bold');
