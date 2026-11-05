@@ -17,10 +17,10 @@ meshSearchTolerance=1e-3; %Tolerance for logic on mesh searching thresholds
 %Material parameter set
 
 c_ini     = 1.2099; % Initial slope
-k1_ini    = 61.790; % "Modulus of fibers"
+k1_ini    = 2*61.790; % "Modulus of fibers"
 k2_ini    = 3.4157e-7; %  "non-linearity" or J-shape
 kappa_ini = 0.2986; % [0,1/3], "distance between graphs"
-k_ini     = 1.2099*1000; % Bulk modulus
+k_ini     = 1.2099*2000; % Bulk modulus
 gamma     = 41;
 LangerAngle_perp = 0/180*pi; % Angle of Langer line with loading direction
 LangerAngle_para = 90/180*pi; % Angle of Langer line with loading direction
@@ -54,7 +54,7 @@ runMode='internal';
 % Path names
 % Path names
 defaultFolder = fileparts(mfilename('fullpath'));
-savePath = 'C:\Sahar-GIBBON-codes\paper3-final\final results-GOH\paper2-revisiong\GUPTA_2fibers\data';
+savePath = 'C:\Users\G00425456@atu.ie\Downloads\GIBBON-master\GIBBON-master\docs\data';
 
 % Defining file names
 febioFebFileNamePart='tempModel';
@@ -376,7 +376,7 @@ for ia = 1:numel(angles_deg)
     e1 = (R*[1 0 0]')';  % Rotated fiber direction
 
     e1_dir = repmat(e1, nElem, 1);
-    e2_dir = repmat([0 0 1], nElem, 1);  % Keep this fixed
+    e2_dir = repmat([0 0 1], nElem, 1);  % Keep this fixed e2_dir = repmat((R*[0 1 0]')', nElem, 1);   % in-plane, rotates with e1  % Keep this fixed
     e3_dir = cross(e1_dir, e2_dir, 2);   % Orthogonal vector
 
     % Plot material directions
